@@ -4,36 +4,43 @@
   <meta charset="UTF-8">
   <title>Бегущая строка</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      background-color: black; /* Цвет фона */
+      background-color: #000; /* Цвет фона */
       overflow: hidden;
     }
-
     body {
       display: flex;
       align-items: center;
       justify-content: center;
+      height: 100vh;
     }
-
     .marquee {
       position: absolute;
       white-space: nowrap;
       font-size: 5vw;
       color: red;
       animation: scroll 15s linear infinite;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
     }
-
     @keyframes scroll {
-      0% { left: 100%; }
-      100% { left: -100%; }
+      0% { left: 100vw; }
+      100% { left: -100vw; }
     }
   </style>
 </head>
 <body>
   <div class="marquee" id="marquee">🎉 Поздравляем с праздником! EMO</div>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(function(e){});
+    }
+  </script>
 </body>
 </html>
