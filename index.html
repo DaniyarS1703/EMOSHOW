@@ -16,25 +16,65 @@
       align-items: center;
       justify-content: flex-start;
       white-space: nowrap;
+      position: relative;
     }
     #marquee {
-      position: relative;
-      animation: marquee 15s linear infinite;
+      position: absolute;
       white-space: nowrap;
+      will-change: transform;
     }
-    @keyframes marquee {
-      0%   { left: 100%; }
-      100% { left: -100%; }
+    @keyframes marquee-left {
+      0%   { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    @keyframes marquee-right {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
   </style>
 </head>
 <body>
-  <div id="marquee">Привет, это бегущая строка EMOSHOW!</div>
+  <div id="marquee">Загрузка...</div>
+
   <script>
-    // Пример динамического обновления текста
-    setTimeout(() => {
-      document.getElementById('marquee').textContent = 'Текст обновлён через 5 секунд!';
-    }, 5000);
+    const API_URL = "http://192.168.1.185:10000/api/latest?apikey=77777";
+
+    async function fetchData() {
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error("Ошибка сети");
+        const data = await response.json();
+        updateMarquee(data);
+      } catch (error) {
+        console.error("Ошибка при получении данных:", error);
+      }
+    }
+
+    function updateMarquee(data) {
+      const marquee = document.getElementById("marquee");
+      marquee.textContent = data.text;
+      marquee.style.color = data.color;
+      document.body.style.backgroundColor = data.bg;
+      marquee.style.fontSize = data.size + "px";
+
+      // Удаляем старую анимацию
+      marquee.style.animation = 'none';
+
+      // Пример расчёта длительности анимации (чем выше speed — тем быстрее)
+      // speed от 1 (медленно) до 6 (быстро)
+      const speed = Number(data.speed);
+      const duration = 20 - speed * 2.5; // от 17.5с (медленно) до 5с (быстро)
+
+      // Выбираем направление анимации
+      const animationName = data.direction === "left" ? "marquee-left" : "marquee-right";
+
+      // Применяем новую анимацию
+      marquee.style.animation = `${animationName} ${duration}s linear infinite`;
+    }
+
+    // Обновляем каждые 5 секунд
+    setInterval(fetchData, 5000);
+    fetchData();
   </script>
 </body>
 </html>
