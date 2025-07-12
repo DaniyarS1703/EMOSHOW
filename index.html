@@ -1,46 +1,40 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Бегущая строка</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8" />
+  <title>EMOSHOW — Бегущая строка fullscreen</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
+      margin: 0; 
+      padding: 0; 
       height: 100%;
-      background-color: #000; /* Цвет фона */
       overflow: hidden;
-    }
-    body {
+      background-color: black;
+      color: white;
+      font-size: 60px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    .marquee {
-      position: absolute;
+      justify-content: flex-start;
       white-space: nowrap;
-      font-size: 5vw;
-      color: red;
-      animation: scroll 15s linear infinite;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
     }
-    @keyframes scroll {
-      0% { left: 100vw; }
-      100% { left: -100vw; }
+    #marquee {
+      position: relative;
+      animation: marquee 15s linear infinite;
+      white-space: nowrap;
+    }
+    @keyframes marquee {
+      0%   { left: 100%; }
+      100% { left: -100%; }
     }
   </style>
 </head>
 <body>
-  <div class="marquee" id="marquee">🎉 Поздравляем с праздником! EMO</div>
+  <div id="marquee">Привет, это бегущая строка EMOSHOW!</div>
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(function(e){});
-    }
+    // Пример динамического обновления текста
+    setTimeout(() => {
+      document.getElementById('marquee').textContent = 'Текст обновлён через 5 секунд!';
+    }, 5000);
   </script>
 </body>
 </html>
