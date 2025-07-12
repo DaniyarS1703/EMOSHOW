@@ -10,31 +10,51 @@
       height: 100%;
       overflow: hidden;
       background-color: black;
-      color: white;
-      font-size: 60px;
       display: flex;
       align-items: center;
-      justify-content: flex-start;
-      white-space: nowrap;
+      justify-content: center;
+      color: white;
+      font-size: 60px;
       position: relative;
+      user-select: none;
+    }
+    #marquee-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
     }
     #marquee {
       position: absolute;
       white-space: nowrap;
       will-change: transform;
+      color: inherit;
+      font-size: inherit;
+      top: 50%;
+      transform: translateY(-50%);
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-name: marquee-left;
+      animation-duration: 15s;
+      left: 100%;
+
+      opacity: 0;
+      transition: opacity 0.7s ease;
     }
     @keyframes marquee-left {
-      0%   { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
+      0%   { transform: translateX(0) translateY(-50%); }
+      100% { transform: translateX(-100%) translateY(-50%); }
     }
     @keyframes marquee-right {
-      0%   { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
+      0%   { transform: translateX(-100%) translateY(-50%); }
+      100% { transform: translateX(0) translateY(-50%); }
     }
   </style>
 </head>
 <body>
-  <div id="marquee">Загрузка...</div>
+  <div id="marquee-container">
+    <div id="marquee">Загрузка...</div>
+  </div>
 
   <script>
     const API_URL = "http://192.168.1.185:10000/api/latest?apikey=77777";
@@ -57,22 +77,21 @@
       document.body.style.backgroundColor = data.bg;
       marquee.style.fontSize = data.size + "px";
 
-      // Удаляем старую анимацию
       marquee.style.animation = 'none';
 
-      // Пример расчёта длительности анимации (чем выше speed — тем быстрее)
-      // speed от 1 (медленно) до 6 (быстро)
       const speed = Number(data.speed);
-      const duration = 20 - speed * 2.5; // от 17.5с (медленно) до 5с (быстро)
+      const clampedSpeed = Math.min(Math.max(speed, 1), 10);
+      const maxDuration = 25;
+      const minDuration = 3;
+      const duration = maxDuration - (clampedSpeed - 1) * ((maxDuration - minDuration) / 9);
 
-      // Выбираем направление анимации
       const animationName = data.direction === "left" ? "marquee-left" : "marquee-right";
 
-      // Применяем новую анимацию
-      marquee.style.animation = `${animationName} ${duration}s linear infinite`;
+      marquee.style.animation = `${animationName} ${duration.toFixed(2)}s linear infinite`;
+
+      marquee.style.opacity = 1;
     }
 
-    // Обновляем каждые 5 секунд
     setInterval(fetchData, 5000);
     fetchData();
   </script>
