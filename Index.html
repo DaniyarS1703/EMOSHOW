@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>EMOSHOW — Бегущая строка fullscreen</title>
+  <style>
+    html, body {
+      margin: 0; 
+      padding: 0; 
+      height: 100%;
+      overflow: hidden;
+      background-color: black;
+      color: white;
+      font-size: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      white-space: nowrap;
+    }
+    #marquee {
+      position: relative;
+      animation: marquee 15s linear infinite;
+      white-space: nowrap;
+    }
+    @keyframes marquee {
+      0%   { left: 100%; }
+      100% { left: -100%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="marquee">Привет, это бегущая строка EMOSHOW!</div>
+  <script>
+    // Пример динамического обновления текста
+    setTimeout(() => {
+      document.getElementById('marquee').textContent = 'Текст обновлён через 5 секунд!';
+    }, 5000);
+  </script>
+</body>
+</html>
